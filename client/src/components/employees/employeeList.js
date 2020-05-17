@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { withRouter } from 'react-router-dom';
+
 import { 
     makeStyles,
     Container,
@@ -12,11 +15,14 @@ import {
     Paper,
     TextField,
     IconButton,
+    Button,
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import { getAllEmployees } from '../../actions/employees';
+import {
+    getAllEmployees,
+    deleteEmployee
+} from '../../actions/employees';
 
 const useStyles = makeStyles({
     searchField: {
@@ -24,36 +30,24 @@ const useStyles = makeStyles({
     },
 });
 
-const mockData = [
-    {
-        id: 1,
-        name: 'first',
-        active: true,
-        department: 'some department'
-    },
-    {
-        id: 2,
-        name: 'second',
-        active: true,
-        department: 'some department'
-    },
-    {
-        id: 3,
-        name: 'third',
-        active: true,
-        department: 'some department'
-    }
-];
-
 const EmployeeList = (props) => {
     const classes = useStyles();
-    const { getAllEmployees } = props;
+    const { getAllEmployees, deleteEmployee, employees, history } = props;
 
-    getAllEmployees();
+    useEffect(() => { getAllEmployees() }, []);
+
+    const handleRedirectToEmployeeForm = () => history.push("/employeeCreate");
+
+    const handleDeleteEmployee = employeeId => deleteEmployee(employeeId);
+
+    const handleRedirectToEditForm = employeeId => history.push(`/employeeEdit/${employeeId}`);
 
     return (
         <Container fixed>
-            <TextField className={classes.searchField} id="outlined-basic" label="Search" variant="outlined" />
+            <div style={{ display: "flex", justifyContent: "space-between"}}>
+                <TextField className={classes.searchField} id="outlined-basic" label="Search" variant="outlined" />
+                <Button onClick={() => handleRedirectToEmployeeForm()}>Create employee</Button>
+            </div>
             <TableContainer component={Paper}>
                 <Table aria-label="employee table">
                     <TableHead>
@@ -66,21 +60,18 @@ const EmployeeList = (props) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {mockData.map(employee => (
-                            <TableRow key={`${employee.id}.${employee.name}`}>
-                                <TableCell component="th" scope="row" align="center">{employee.id}</TableCell>
+                        {employees.map(employee => (
+                            <TableRow key={`${employee._id}.${employee.name}`}>
+                                <TableCell component="th" scope="row" align="center">{employee._id}</TableCell>
                                 <TableCell align="center">{employee.name}</TableCell>
                                 <TableCell align="center">{employee.department}</TableCell>
                                 <TableCell align="center">{`${employee.active}`}</TableCell>
                                 <TableCell align="center">
                                     <>
-                                        <IconButton aria-label="view">
-                                            <VisibilityIcon />
-                                        </IconButton>
-                                        <IconButton aria-label="edit">
+                                        <IconButton aria-label="edit" onClick={() => handleRedirectToEditForm(employee._id)}>
                                             <EditIcon />
                                         </IconButton>
-                                        <IconButton aria-label="delete">
+                                        <IconButton aria-label="delete" onClick={() => handleDeleteEmployee(employee._id)}>
                                             <DeleteIcon />
                                         </IconButton>
                                     </>
@@ -96,8 +87,14 @@ const EmployeeList = (props) => {
 
 const mapDispatchToProps = dispatch => ({
     getAllEmployees: () => dispatch(getAllEmployees()),
+    deleteEmployee: employeeId => dispatch(deleteEmployee(employeeId))
 })
 
-const mapStateToProps = state => ({})
+const mapStateToProps = state => ({
+    employees: state.employees.employees,
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(EmployeeList);
+export default compose (
+    connect(mapStateToProps, mapDispatchToProps),
+    withRouter
+)(EmployeeList);

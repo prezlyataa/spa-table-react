@@ -1,10 +1,11 @@
 import {
     GET_ALL_EMPLOYEES,
-    CREATE_EMPLOYEE,
+    GET_CURRENT_EMPLOYEE,
 } from '../constants/actionTypes';
 
 const initialState = {
     employees: [],
+    currentEmployee: null,
 };
 
 const employees = (state = initialState, action) => {
@@ -14,6 +15,11 @@ const employees = (state = initialState, action) => {
                 ...state,
                 employees: action.payload
             };
+        case GET_CURRENT_EMPLOYEE:
+            return {
+                ...state,
+                currentEmployee: action.payload
+            };  
         default:
             return state;
     }

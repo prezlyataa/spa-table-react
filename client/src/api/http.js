@@ -28,8 +28,8 @@ export const Http = {
 
 export default {
   getAllEmployees: () => Http.get(`${BASE_URL}/employees`),
-  getEmployeeById: id => Http.get(`${BASE_URL}/employees/${id}`),
-  updateEmployee: (id, updates) => Http.put(`${BASE_URL}/employees/${id}`, updates),
+  getEmployeeById: id => Http.get(`${BASE_URL}/employees:${id}`),
+  updateEmployee: (id, updates) => Http.put(`${BASE_URL}/employees:${id}`, updates),
   createEmployee: question => Http.post(`${BASE_URL}/employees`, question),
-  deleteEmployee: id => Http.delete(`${BASE_URL}/employees/${id}`)
+  deleteEmployee: id => Http.delete(`${BASE_URL}/employees:${id}`)
 };
