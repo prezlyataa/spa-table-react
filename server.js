@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -7,7 +7,7 @@ const MongoClient = require("mongodb").MongoClient;
 const router = require("./router");
 const app = express();
 
-const SERVER = '127.0.0.1:27017';
+const SERVER = "127.0.0.1:27017";
 const DB = "spa-react";
 const Mongo_Shall = `mongodb://${SERVER}/${DB}`;
 
@@ -37,9 +37,9 @@ connection.on("connected", () => console.log("Connected to database"));
 connection.on("error", err => console.log("Connection failed with - ", err));
 
 app
-    .use(express.static(path.join(__dirname, 'client/build')))
+    .use(express.static(path.join(__dirname, "client/build")))
     .use(bodyParser.urlencoded({ extended: true }))
     .use(bodyParser.json())
     .use(cors())
-    .use('/', router)
+    .use("/", router)
     .listen(PORT, () => console.log(`App listening on port ${PORT}!`));
