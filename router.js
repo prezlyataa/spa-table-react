@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const Employee = require("./models/employee");
 const router = express.Router();
-const ObjectId = require('mongodb').ObjectID
+const ObjectId = require('mongodb').ObjectID;
 
 router.all('*', (req, res, next) => {
     res
@@ -49,6 +49,17 @@ router.delete("/employees:id", (req, res, next) => {
     Employee.findByIdAndRemove(req.params.id.substr(1), req.body, (err, employee) => {
         if (err) return next(err);
         res.json(employee);
+    });
+});
+
+router.post("/employees/search", (req, res, next) => {
+    const query = {};
+
+    if (req.body.query) query.name = req.body.query;
+
+    Employee.find(query, (err, employees) => {
+        if (err) return next(err);
+        res.json(employees);
     });
 });
 

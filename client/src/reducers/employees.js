@@ -1,6 +1,8 @@
 import {
     GET_ALL_EMPLOYEES,
     GET_CURRENT_EMPLOYEE,
+    RESET_CURRENT_EMPLOYEE,
+    SEARCH_EMPLOYEES
 } from '../constants/actionTypes';
 
 const initialState = {
@@ -20,6 +22,16 @@ const employees = (state = initialState, action) => {
                 ...state,
                 currentEmployee: action.payload
             };  
+        case RESET_CURRENT_EMPLOYEE:
+            return {
+                ...state,
+                currentEmployee: null
+            };  
+        case SEARCH_EMPLOYEES:
+            return {
+                ...state,
+                employees: action.payload
+            };
         default:
             return state;
     }
